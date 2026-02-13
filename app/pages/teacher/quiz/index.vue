@@ -82,7 +82,7 @@ const submitQuiz = async () => {
       quizzes.value.unshift(data.value)
       showCreateDialog.value = false
       resetForm()
-      // Navigate to manage questions
+      // navigate to manage questions
       navigateTo(`/teacher/quiz/${data.value.id}/questions`)
     }
   }
@@ -164,8 +164,8 @@ const formatDate = (dateString: string) => {
   <div class="container mx-auto p-6">
     <div class="flex justify-between items-center mb-6">
       <div>
-        <h1 class="text-3xl font-bold">Quiz Management</h1>
-        <p class="text-muted-foreground">Manage your quizzes and monitor student progress</p>
+        <h1 class="text-3xl font-bold">Quiz</h1>
+        <p class="text-muted-foreground">Atur progress pembelajaran murid</p>
       </div>
       <Button @click="showCreateDialog = true">
         <Plus class="mr-2 h-4 w-4" />
@@ -173,14 +173,14 @@ const formatDate = (dateString: string) => {
       </Button>
     </div>
 
-    <!-- Filter by Classroom -->
+    <!-- filter -->
     <div class="mb-6">
       <Select v-model="selectedClassroom">
         <SelectTrigger class="w-[280px]">
           <SelectValue placeholder="Filter by classroom" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Classrooms</SelectItem>
+          <SelectItem value="all">Kelas</SelectItem>
           <SelectItem v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
             {{ classroom.name }}
           </SelectItem>
@@ -188,7 +188,7 @@ const formatDate = (dateString: string) => {
       </Select>
     </div>
 
-    <!-- Quiz Cards Grid -->
+    <!-- quiz card -->
     <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card v-for="i in 6" :key="i" class="animate-pulse">
         <CardContent class="p-6">
@@ -199,9 +199,9 @@ const formatDate = (dateString: string) => {
 
     <div v-else-if="filteredQuizzes.length === 0" class="text-center py-12">
       <FileQuestion class="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-      <h3 class="text-lg font-semibold mb-2">No quizzes yet</h3>
-      <p class="text-muted-foreground mb-4">Create your first quiz to get started</p>
-      <Button @click="showCreateDialog = true">Create Quiz</Button>
+      <h3 class="text-lg font-semibold mb-2">Belum Membuat Quiz</h3>
+      <p class="text-muted-foreground mb-4">Buat quiz sekarang</p>
+      <Button @click="showCreateDialog = true">Buat Quiz</Button>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -227,15 +227,15 @@ const formatDate = (dateString: string) => {
             </div>
             <div class="flex items-center text-sm text-muted-foreground">
               <FileQuestion class="mr-2 h-4 w-4" />
-              {{ quiz.question_count }} Questions
+              {{ quiz.question_count }} Pertanyaan
             </div>
             <div class="flex items-center text-sm text-muted-foreground">
               <Users class="mr-2 h-4 w-4" />
-              {{ quiz.attempt_count }} Attempts
+              {{ quiz.attempt_count }} Kesempatan
             </div>
             <div v-if="quiz.time_limit" class="flex items-center text-sm text-muted-foreground">
               <Clock class="mr-2 h-4 w-4" />
-              {{ quiz.time_limit }} minutes
+              {{ quiz.time_limit }} Menit
             </div>
           </div>
         </CardContent>
@@ -246,7 +246,7 @@ const formatDate = (dateString: string) => {
           </Button>
           <Button variant="outline" size="sm" class="flex-1" @click="viewResults(quiz)">
             <BarChart3 class="mr-2 h-4 w-4" />
-            Results
+            Hasil
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
@@ -257,7 +257,7 @@ const formatDate = (dateString: string) => {
             <DropdownMenuContent align="end">
               <DropdownMenuItem @click="manageQuestions(quiz)">
                 <List class="mr-2 h-4 w-4" />
-                Manage Questions
+                Buat Pertanyaan
               </DropdownMenuItem>
               <DropdownMenuItem @click="toggleQuizStatus(quiz)">
                 <Power class="mr-2 h-4 w-4" />
@@ -274,74 +274,7 @@ const formatDate = (dateString: string) => {
       </Card>
     </div>
 
-    <!-- Create/Edit Quiz Dialog -->
-    <Dialog v-model:open="showCreateDialog">
-      <DialogContent class="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{{ editingQuiz ? 'Edit Quiz' : 'Create New Quiz' }}</DialogTitle>
-        </DialogHeader>
-        
-        <form @submit.prevent="submitQuiz" class="space-y-4">
-          <div class="space-y-2">
-            <Label for="classroom">Classroom</Label>
-            <Select v-model="quizForm.classroom" required>
-              <SelectTrigger>
-                <SelectValue placeholder="Select classroom" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
-                  {{ classroom.name }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div class="space-y-2">
-            <Label for="title">Quiz Title</Label>
-            <Input id="title" v-model="quizForm.title" placeholder="Enter quiz title" required />
-          </div>
-
-          <div class="space-y-2">
-            <Label for="description">Description</Label>
-            <Textarea id="description" v-model="quizForm.description" placeholder="Enter quiz description" rows="3" />
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div class="space-y-2">
-              <Label for="time_limit">Time Limit (minutes)</Label>
-              <Input id="time_limit" v-model.number="quizForm.time_limit" type="number" placeholder="Optional" />
-            </div>
-
-            <div class="space-y-2">
-              <Label>Status</Label>
-              <div class="flex items-center space-x-2">
-                <Switch id="is_active" v-model="quizForm.is_active" />
-                <Label for="is_active">Active</Label>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div class="space-y-2">
-              <Label for="start_time">Start Time (Optional)</Label>
-              <Input id="start_time" v-model="quizForm.start_time" type="datetime-local" />
-            </div>
-
-            <div class="space-y-2">
-              <Label for="end_time">End Time (Optional)</Label>
-              <Input id="end_time" v-model="quizForm.end_time" type="datetime-local" />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" @click="showCreateDialog = false">Cancel</Button>
-            <Button type="submit" :disabled="submitting">
-              {{ submitting ? 'Saving...' : editingQuiz ? 'Update Quiz' : 'Create Quiz' }}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <!-- create/edit -->
 
     <!-- result dialog -->
     <Dialog v-model:open="showResultsDialog">
