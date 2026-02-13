@@ -1,4 +1,4 @@
-# Nuxt Minimal Starter
+# Nuxt
 
 Pastikan anda telah menginstall node dan pnpm.
 
