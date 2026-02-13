@@ -1,4 +1,3 @@
-// composables/useAuth.ts
 interface LoginCredentials {
   username: string
   password: string

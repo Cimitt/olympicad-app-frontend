@@ -12,47 +12,52 @@ import {
   IconReport,
 } from "@tabler/icons-vue"
 
+// Ambil data user dari auth
 const { getCurrentUser } = useAuth()
-
 const user = ref<any>(null)
 
 onMounted(async () => {
   const { data, error } = await getCurrentUser()
   if (data.value) {
-    user.value = data.value // Menyimpan data user setelah berhasil di-fetch
+    user.value = data.value 
   } else {
-    // Handle error jika data tidak berhasil diambil
     console.error(error.value)
   }
 })
 
+// Data navigasi
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/guru",
       icon: IconDashboard,
     },
     {
       title: "Kelas Saya",
-      url: "#",
+      url: "/classroom",
       icon: IconListDetails,
     },
     {
-      title: "Laporan",
-      url: "#",
-      icon: IconChartBar,
+      title: "Quiz",
+      url: "/classroom",
+      icon: IconListDetails,
+    },
+    {
+      title: "Kelas Saya",
+      url: "/teacher/quiz",
+      icon: IconFolder,
     },
   ],
   Interaktif: [
     {
       name: "Quiz",
-      url: "#",
+      url: "/teacher/quiz",
       icon: IconFolder,
     },
     {
       name: "Laporan",
-      url: "#",
+      url: "/reports", 
       icon: IconReport,
     },
   ],
@@ -65,20 +70,22 @@ const data = {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton as-child class="data-[slot=sidebar-menu-button]:p-1.5!">
-            <a href="#">
+            <NuxtLink to="#">
               <NuxtImg src="/smk.png" class="size-6" />
               <span class="text-base font-semibold">LMSmuhda.</span>
-            </a>
+            </NuxtLink>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>
+    
+    <!-- Sidebar Content -->
     <SidebarContent>
-      <NuxtLink to="">
-        <NavMain :items="data.navMain" />
-        <NavDocuments :items="data.Interaktif" />
-      </NuxtLink>
+      <!-- Main Navigation -->
+      <NavMain :items="data.navMain" />
     </SidebarContent>
+    
+    <!-- Sidebar Footer -->
     <SidebarFooter>
       <NavUser :user="user" />
     </SidebarFooter>

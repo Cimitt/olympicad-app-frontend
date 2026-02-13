@@ -39,17 +39,19 @@ const { isMobile } = useSidebar()
 </script>
 
 <template>
-  <SidebarGroup class="group-data-[collapsible=icon]:hidden">
-    <SidebarGroupLabel>Interaktif</SidebarGroupLabel>
-    <SidebarMenu>
-      <SidebarMenuItem v-for="item in items" :key="item.name">
-        <SidebarMenuButton as-child>
-          <a :href="item.url">
-            <component :is="item.icon" />
-            <span>{{ item.name }}</span>
-          </a>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    </SidebarMenu>
+  <SidebarGroup>
+    <SidebarGroupContent class="flex flex-col gap-2">
+      <SidebarMenu>
+        <SidebarMenuItem v-for="item in items" :key="item.name">
+          <NuxtLink :to="item.url" class="flex items-center gap-2">
+            <SidebarMenuButton :tooltip="item.name">
+              <component :is="item.icon" v-if="item.icon" class="w-5 h-5" />
+              <span>{{ item.name }}</span>
+            </SidebarMenuButton>
+          </NuxtLink>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarGroupContent>
   </SidebarGroup>
 </template>
+

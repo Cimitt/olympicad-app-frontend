@@ -275,6 +275,73 @@ const formatDate = (dateString: string) => {
     </div>
 
     <!-- create/edit -->
+    <Dialog v-model:open="showCreateDialog">
+      <DialogContent class="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{{ editingQuiz ? 'Edit Quiz' : 'Create New Quiz' }}</DialogTitle>
+        </DialogHeader>
+        
+        <form @submit.prevent="submitQuiz" class="space-y-4">
+          <div class="space-y-2">
+            <Label for="classroom">Classroom</Label>
+            <Select v-model="quizForm.classroom" required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select classroom" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
+                  {{ classroom.name }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="title">Judul</Label>
+            <Input id="title" v-model="quizForm.title" placeholder="Enter quiz title" required />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="description">Deskripsi</Label>
+            <Textarea id="description" v-model="quizForm.description" placeholder="Enter quiz description" rows="3" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="time_limit">Waktu (minutes)</Label>
+              <Input id="time_limit" v-model.number="quizForm.time_limit" type="number" placeholder="Optional" />
+            </div>
+
+            <div class="space-y-2">
+              <Label>Status</Label>
+              <div class="flex items-center space-x-2">
+                <Switch id="is_active" v-model="quizForm.is_active" />
+                <Label for="is_active">Aktif</Label>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <Label for="start_time">Mulai (Optional)</Label>
+              <Input id="start_time" v-model="quizForm.start_time" type="datetime-local" />
+            </div>
+
+            <div class="space-y-2">
+              <Label for="end_time">End Time (Optional)</Label>
+              <Input id="end_time" v-model="quizForm.end_time" type="datetime-local" />
+            </div>
+          </div> -->
+
+          <DialogFooter>
+            <Button type="button" variant="outline" @click="showCreateDialog = false">Cancel</Button>
+            <Button type="submit" :disabled="submitting">
+              {{ submitting ? 'Saving...' : editingQuiz ? 'Update Quiz' : 'Create Quiz' }}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
 
     <!-- result dialog -->
     <Dialog v-model:open="showResultsDialog">

@@ -22,10 +22,16 @@ import {
 } from '@tabler/icons-vue'
 
 interface User {
-  name: string
+  id: number
+  username: string
+  first_name: string
+  last_name: string
   email: string
-  avatar: string
+  profile_picture?: string
+  role?: 'student' | 'teacher' | 'admin'
+  grade?: number
 }
+
 
 defineProps<{
   user: User
@@ -47,8 +53,8 @@ onMounted(() => {
 })
 
 const handleLogout = () => {
-  logout() // Menggunakan logout dari composable
-  router.push('/login') // Redirect ke halaman login setelah logout
+  logout()
+  router.push('/login')
 }
 
 const goToProfile = () => {
@@ -67,13 +73,13 @@ const goToProfile = () => {
           >
             <Avatar class="h-8 w-8 rounded-lg grayscale">
               <!-- Use fallback if user is null or missing -->
-              <AvatarImage :src="user?.avatar || '/default-avatar.png'" :alt="user?.name || 'Guest'" />
+              <AvatarImage :src="user?.profile_picture || '/default-avatar.png'" :alt="user?.first_name || 'Guest'" />
               <AvatarFallback class="rounded-lg">
-                {{ user?.name ? user.name.charAt(0).toUpperCase() : 'G' }} <!-- Display first letter of the name -->
+                {{ user?.first_name ? user.last_name.charAt(0).toUpperCase() : 'U' }} 
               </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">{{ user?.name || 'Guest' }}</span>
+              <span class="truncate font-medium">{{ user?.first_name || 'Guest' }}</span>
               <span class="text-muted-foreground truncate text-xs">
                 {{ user?.email || 'No email provided' }}
               </span>
@@ -90,13 +96,13 @@ const goToProfile = () => {
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user?.avatar || '/default-avatar.png'" :alt="user?.name || 'Guest'" />
+                <AvatarImage :src="user?.profile_picture || 'U'" />
                 <AvatarFallback class="rounded-lg">
-                  {{ user?.name ? user.name.charAt(0).toUpperCase() : 'G' }} <!-- Display first letter -->
+                  {{ user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'U' }}
                 </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-medium">{{ user?.name || 'Guest' }}</span>
+                <span class="truncate font-medium">{{ user?.first_name || 'User' }}</span>
                 <span class="text-muted-foreground truncate text-xs">
                   {{ user?.email || 'No email provided' }}
                 </span>
