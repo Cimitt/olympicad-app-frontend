@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import {
-  IconCreditCard,
-  IconDotsVertical,
-  IconLogout,
-  IconNotification,
-  IconUserCircle,
-} from "@tabler/icons-vue"
-
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
 import {
   Avatar,
   AvatarFallback,
@@ -22,11 +17,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from '@/components/ui/sidebar'
+  IconUserCircle,
+  IconLogout,
+} from '@tabler/icons-vue'
 
 interface User {
   name: string
@@ -38,7 +31,29 @@ defineProps<{
   user: User
 }>()
 
-const { isMobile } = useSidebar()
+const { logout } = useAuth()
+const router = useRouter()
+
+// Detect mobile screen size
+const isMobile = ref(false)
+
+const updateMobileStatus = () => {
+  isMobile.value = window.innerWidth <= 768 // Adjust the threshold as per your requirement
+}
+
+onMounted(() => {
+  updateMobileStatus() // Initial check
+  window.addEventListener('resize', updateMobileStatus) // Listen for window resizing
+})
+
+const handleLogout = () => {
+  logout() // Menggunakan logout dari composable
+  router.push('/login') // Redirect ke halaman login setelah logout
+}
+
+const goToProfile = () => {
+  router.push('/profile') // Arahkan pengguna ke halaman profil
+}
 </script>
 
 <template>
@@ -51,15 +66,16 @@ const { isMobile } = useSidebar()
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg grayscale">
-              <AvatarImage :src="user.avatar" :alt="user.name" />
+              <!-- Use fallback if user is null or missing -->
+              <AvatarImage :src="user?.avatar || '/default-avatar.png'" :alt="user?.name || 'Guest'" />
               <AvatarFallback class="rounded-lg">
-                U
+                {{ user?.name ? user.name.charAt(0).toUpperCase() : 'G' }} <!-- Display first letter of the name -->
               </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">{{ user.name }}</span>
+              <span class="truncate font-medium">{{ user?.name || 'Guest' }}</span>
               <span class="text-muted-foreground truncate text-xs">
-                {{ user.email }}
+                {{ user?.email || 'No email provided' }}
               </span>
             </div>
             <IconDotsVertical class="ml-auto size-4" />
@@ -74,28 +90,28 @@ const { isMobile } = useSidebar()
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
+                <AvatarImage :src="user?.avatar || '/default-avatar.png'" :alt="user?.name || 'Guest'" />
                 <AvatarFallback class="rounded-lg">
-                  CN
+                  {{ user?.name ? user.name.charAt(0).toUpperCase() : 'G' }} <!-- Display first letter -->
                 </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-medium">{{ user.name }}</span>
+                <span class="truncate font-medium">{{ user?.name || 'Guest' }}</span>
                 <span class="text-muted-foreground truncate text-xs">
-                  {{ user.email }}
+                  {{ user?.email || 'No email provided' }}
                 </span>
               </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem @click="goToProfile">
               <IconUserCircle />
               Profile
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click="handleLogout">
             <IconLogout />
             Log out
           </DropdownMenuItem>
@@ -104,3 +120,4 @@ const { isMobile } = useSidebar()
     </SidebarMenuItem>
   </SidebarMenu>
 </template>
+

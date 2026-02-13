@@ -1,40 +1,32 @@
 <script setup lang="ts">
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-vue"
-
+import { ref, onMounted } from 'vue'
+import { useAuth } from '@/composables/useAuth'
 import NavDocuments from '@/components/NavDocuments.vue'
 import NavMain from '@/components/NavMain.vue'
 import NavUser from '@/components/NavUser.vue'
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from '@/components/ui/sidebar'
+  IconChartBar,
+  IconDashboard,
+  IconFolder,
+  IconListDetails,
+  IconReport,
+} from "@tabler/icons-vue"
+
+const { getCurrentUser } = useAuth()
+
+const user = ref<any>(null)
+
+onMounted(async () => {
+  const { data, error } = await getCurrentUser()
+  if (data.value) {
+    user.value = data.value // Menyimpan data user setelah berhasil di-fetch
+  } else {
+    // Handle error jika data tidak berhasil diambil
+    console.error(error.value)
+  }
+})
 
 const data = {
-  user: {
-    name: "username",
-    email: "contoh@promuda.com",
-    avatar: "/",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -51,16 +43,6 @@ const data = {
       url: "#",
       icon: IconChartBar,
     },
-    // {
-    //   title: "",
-    //   url: "#",
-    //   icon: IconFolder,
-    // },
-    // {
-    //   title: "Team",
-    //   url: "#",
-    //   icon: IconUsers,
-    // },
   ],
   Interaktif: [
     {
@@ -82,7 +64,7 @@ const data = {
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton as-child class="data-[slot=sidebar-menu-button]:!p-1.5">
+          <SidebarMenuButton as-child class="data-[slot=sidebar-menu-button]:p-1.5!">
             <a href="#">
               <NuxtImg src="/smk.png" class="size-6" />
               <span class="text-base font-semibold">LMSmuhda.</span>
@@ -98,7 +80,7 @@ const data = {
       </NuxtLink>
     </SidebarContent>
     <SidebarFooter>
-      <NavUser :user="data.user" />
+      <NavUser :user="user" />
     </SidebarFooter>
   </Sidebar>
 </template>
