@@ -3,9 +3,9 @@ export default defineNuxtRouteMiddleware(async () => {
 
   if (!isAuthenticated.value) return
 
-  if (!isAuthenticated.value) {
-    return navigateTo('/login')
-  }
+//   if (!isAuthenticated.value) {
+//     return navigateTo('/login')
+//   }
 
   const { data } = await getCurrentUser()
 
