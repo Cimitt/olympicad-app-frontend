@@ -8,10 +8,6 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 
-definePageMeta({
-  middleware: 'auth'
-})
-
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
@@ -44,11 +40,9 @@ const handleLogin = async (e: Event) => {
 
   switch (userData.value.role) {
     case 'teacher':
-      return navigateTo('/teacher')
+      return navigateTo('/guru')
     case 'student':
-      return navigateTo('/student')
-    case 'admin':
-      return navigateTo('/admin')
+      return navigateTo('/siswa')
   }
 
   loading.value = false

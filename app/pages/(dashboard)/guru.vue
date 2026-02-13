@@ -9,8 +9,7 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import ChartAreaInteractive from '@/components/ChartAreaInteractive.vue'
 import DataTable from '@/components/DataTable.vue'
 import SiteHeader from '@/components/SiteHeader.vue'
-// Pastikan komponen Modal dan UButton sudah terdaftar/import jika tidak auto-import
-// import Modal from '@/components/ui/Modal.vue' 
+import { Button } from '@/components/ui/button'
 
 import {
   SidebarInset,
@@ -35,16 +34,6 @@ const data = [
     limit: "5",
     reviewer: "Eddie Lake",
   },
-  {
-    id: 2,
-    header: "Table of contents",
-    type: "Table of contents",
-    status: "Done",
-    target: "29",
-    limit: "24",
-    reviewer: "Eddie Lake",
-  },
-  // ... data lainnya tetap sama
 ]
 </script>
 
@@ -71,9 +60,9 @@ const data = [
             </div>
             
             <div class="flex gap-3">
-              <UButton color="info" @click="showModal = true">
+              <Button color="info" @click="showModal = true">
                 + Buat Kelas Baru
-              </UButton>
+              </Button>
               
               <Modal 
                 v-model="showModal" 

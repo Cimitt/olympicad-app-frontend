@@ -60,9 +60,9 @@ const data = [
             </div>
             
             <div class="flex gap-3">
-              <NuxtLink @click="showModal = true">
+              <Button @click="showModal = true">
                 + Buat Kelas Baru
-              </NuxtLink>
+              </Button>
               
               <Modal 
                 v-model="showModal" 
